@@ -2,45 +2,70 @@
 
 from abc import ABC, abstractmethod
 
-class GeoJSON(ABC):
 
-    @abstractmethod
-    def draw(self):
-        pass
+class GeoJson(ABC):
+    pass
 
-class Geometry(GeoJSON):
-
-    def __init__(self, coordinates):
-        self.coord = coordinates
+    # @abstractmethod
+    # def bbox (self):
+    #   pass
 
 
-class Point(GeoJSON):
+class Feature(GeoJson):
+    def __init__(self, id, geometry):
+        self.id = id
+        self.geometry = geometry
 
 
-    def __init__(self, ax = 0, ay = 0):
-        self.x = ax
-        self.y = ay
+class FeatureCollection(GeoJson):
+    def __init__(self, features):
+        self.features = features
 
-    def __str__(self):
-        return "Bod [{} {}]".format(self.x, self.y)
 
-class Polyline(GeoJSON):
+class Geometry(GeoJson, ABC):
+    pass
+
+
+class GeometryCollection(Geometry):
+    def __init__(self, geometries):
+        self.geometries = geometries
+
+
+class Point(Geometry):
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+
+class LineString(Geometry):
     def __init__(self, points):
-        self.pts = points
-
-    def __str__(self):
-        return "Polyline ({} points)".format(len(self.pts))
+        self.points = points
 
 
-class Polygon(GeoJSON):
+class Polygon(Geometry):
+    def __init__(self, exterior_ring, interior_rings):
+        self.exteriorRing = exterior_ring
+        self.interiorRings = interior_rings
+
+
+class MultiGeometry(Geometry, ABC):
+    def __init__(self, multigeometries):
+        self.multigeometries = multigeometries
+
+    def explode(self):
+        return self.multigeometries
+
+
+class MultiPoint(MultiGeometry):
     def __init__(self, points):
-        self.pts = points
+        super().__init__(points)
 
-    def __str__(self):
-        return "Polygon ({} points)".format(len(self.pts))
 
-class LineSegmant(Polyline):
-    # Dostane 2 body a medzi nimi vytvorí úsečku
-    def __init__(self, p1, p2):
-        pts = [p1, p2]
-        super().__init__(pts)
+class MultiLineString(MultiGeometry):
+    def __init__(self, lineStrings):
+        super().__init__(lineStrings)
+
+
+class MultiPolygon(MultiGeometry):
+    def __init__(self, polygons):
+        super().__init__(polygons)
