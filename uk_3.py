@@ -56,7 +56,7 @@ class Polygon(Geometry):
 
 class MultiGeometry(Geometry, ABC):
     """Abstraktní třída, potomek třídy geometry,
-    vytvořena pro metodu explode geometry"""
+    vytvořena pro metodu explode geometry """
     def __init__(self, multi_geometries):
         self.multi_geometries = multi_geometries
 
