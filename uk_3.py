@@ -36,10 +36,16 @@ class Point(Geometry):
         self.x = x
         self.y = y
 
+    def __str__(self):
+        return "Point [{} {}]".format(self.x, self.y)
+
 
 class LineString(Geometry):
     def __init__(self, points):
         self.points = points
+
+    def __str__(self):
+        return "Linestring ({} points)".format(len(self.points))
 
 
 class Polygon(Geometry):
@@ -49,11 +55,13 @@ class Polygon(Geometry):
 
 
 class MultiGeometry(Geometry, ABC):
-    def __init__(self, multigeometries):
-        self.multigeometries = multigeometries
+    """Abstraktní třída, potomek třídy geometry,
+    vytvořena pro metodu explode geometry"""
+    def __init__(self, multi_geometries):
+        self.multi_geometries = multi_geometries
 
     def explode(self):
-        return self.multigeometries
+        return self.multi_geometries
 
 
 class MultiPoint(MultiGeometry):
@@ -62,8 +70,8 @@ class MultiPoint(MultiGeometry):
 
 
 class MultiLineString(MultiGeometry):
-    def __init__(self, lineStrings):
-        super().__init__(lineStrings)
+    def __init__(self, line_strings):
+        super().__init__(line_strings)
 
 
 class MultiPolygon(MultiGeometry):
